@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TempMail</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" />
+  <script src="https://code.jquery.com/jquery.min.js"></script>
+  <script src="https://www.1secmail.com/api/v1/" type="text/javascript"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <style>
+    /* Base variables */
+    :root {
+      font-family: "Inter", sans-serif !important;
+      height: 100vh;
+      width: 100%;
+      background-color: var(--light-color);
+      color: var(--font-color);
+      font-size: var(--font-size);
+      transition: var(--transition);
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+
+      --primary-color: #040e66;
+      --secondary-color: #6c757d;
+      --dark-color: #343a40;
+      --light-color: #f8f9fa;
+      --danger-color: #dc3545;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --info-color: #17a2b8;
+      --font-color: #212529;
+      --font-size: 1.2rem;
+      --border-radius: 0.5rem;
+      --transition: all 0.5s ease;
+    }
+
+    /* Basic Body styling */
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+      background-color: #232426;
+      text-align: center;
+      font-family: Sans-Serif Roboto;
+      font-weight: bold;
+    }
+
+    /* Header styling */
+    .horizontalContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      width: 98%;
+      margin: 20px 0;
+      border: dashed;
+      border-width: 2px;
+      border-color: #646573;
+      border-radius: 20px;
+      text-align: center;
+    }
+
+    /* Email address input field */
+    #addr {
+      width: 90%;
+      color: white;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 40px;
+      border: .5px solid var(--secondary-color);
+      margin: 0.25rem;
+      background-color: #414854;
+      box-sizing: border-box;
+    }
+
+    #addr:focus {
+      border: 1px solid var(--primary-color);
+    }
+
+    /* Styling for buttons */
+    button {
+      color: white;
+      background-color: #414854;
+      padding: 0.45rem 0.75rem;
+      font-size: 1rem;
+      font-weight: bolder !important;
+      border: 1px solid var(--dark-color);
+      border-radius: 50px;
+      cursor: pointer;
+      transition: var(--transition);
+      margin: 0.25rem;
+      display: inline-block;
+      text-align: center;
+      text-decoration: none;
+      outline: none;
+      width: 150px;
+      max-width: 250px;
+    }
+
+    /* Button hover effects */
+    button:hover {
+      background-color: #06138b;
+      color: white !important;
+    }
+
+    /* Table Styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    table th,
+    table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: var(--border-radius);
+      box-sizing: border-box;
+    }
+
+    /* Alternating row colors */
+    table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    table tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+
+    table th {
+      background-color: var(--primary-color);
+      color: var(--light-color);
+      text-align: center;
+    }
+
+    /* Footer Styling */
+    footer {
+      background-color: var(--primary-color);
+      color: var(--light-color);
+      text-align: center;
+      font-size: 0.875rem;
+      padding: 0.5rem;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      font-weight: bolder;
+      box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    footer .social a {
+      color: var(--font-color);
+      margin: 0 10px;
+    }
+
+    footer .social a:hover {
+      color: rgb(214, 227, 243);
+    }
+
+    /* Warning button */
+    .warning-button {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      font-size: 0.75rem;
+      padding: 0.5rem;
+      margin: 1rem;
+    }
+
+    .warning-button:hover {
+      background-color: var(--danger-color);
+      color: var(--light-color);
+      cursor: pointer;
+    }
+
+    /* Massagebox */
+    .massagebox {
+      bottom: 50px;
+      color: gray;
+      width: 0%; /* Start with 0% width */
+      transition: width 0.5s ease; /* Smooth transition */
+    }
+
+    /* Media Queries for Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        font-size: 1.5rem;
+      }
+
+      .horizontalContainer {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      #addr {
+        max-width: 100%;
+      }
+
+      button {
+        font-size: 1rem;
+        max-width: 100%;
+      }
+
+      table th,
+      table td {
+        font-size: 0.9rem;
+      }
+
+      footer {
+        font-size: 0.75rem;
+      }
+
+      .warning-button {
+        font-size: 0.65rem;
+        padding: 0.4rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        font-size: 1rem;
+      }
+
+      .horizontalContainer {
+        gap: 5px;
+      }
+
+      button {
+        font-size: 0.75rem;
+      }
+
+      table th,
+      table td {
+        font-size: 0.75rem;
+        width: 100%;
+      }
+
+      footer {
+        font-size: 0.65rem;
+      }
+    }
+
+    .b2k {
+      color: white;
+    }
+
+    .op {
+      text-align: center;
+      color: gray;
+    }
+
+    tr th {
+      width: 100%;
+    }
+
+    .niyom {
+      text-align: center;
+      text-decoration: underline;
+      color: gray;
+    }
+    .boila a {
+      margin: px;
+      color: Black;
+      border: solid ;
+      border-width: 3px;
+      border-color: yellow;
+      background-color: yellow;
+      border-radius: 20px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    header{
+      background-color: #4bd1fa;
+      
+    }
+    .hui{
+      color: white;
+      text-align: left;
+      margin: 10px;
+      text-decoration: none;
+      
+    }
+    
+  </style>
+</head>
+
+<body>
+  
+  <header>
+    <h2 class="hui" ><a class="hui" href="Beta/New.html">GETOTP in @1secmail</a></h2>
+     
+  </header>
+ 
+  
+  
+  <div class="horizontalContainer">
+    <h2 class="b2k">Your Temporary Email Address</h2>
+    <input id="addr" placeholder="email address" readonly />
+    <button onclick="refreshMail()">Refresh Mailbox</button>
+    <button onclick="genEmail()">New Address</button>
+    <button id="myButton" class="copy-btn" onclick="copyEmail()">Copy</button>
+  </div>
+  <h2 class="niyom">INSTRUCTIONS</h2>
+  <h3 class="op">Click on New Address then <br> you can see Inbox . <br> After Receive message, it will be shown automatically</h3>
+
+  <table id="emails"></table>
+
+  <div class="massagebox"></div>
+
+  <script>
+    let isMessageReceived = false; // Flag to track message reception
+    let isAutoRefreshing = true; // Flag to track auto-refresh state
+
+    window.onload = function () {
+      genEmail(); // Auto-generate email when page loads
+    };
+
+    function genEmail() {
+      $.getJSON(
+        "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1",
+        (res) => {
+          $("#addr").val(res[0]); // Set the generated email in the input field
+          if (isAutoRefreshing) {
+            refreshMail(); // Refresh inbox to check for new messages
+          }
+        }
+      );
+    }
+
+    function refreshMail() {
+      const { user, domain } = getUserAndDomain();
+      if (!user || !domain) return;
+
+      $.getJSON(
+        `https://www.1secmail.com/api/v1/?action=getMessages&login=${user}&domain=${domain}`,
+        (emails) => {
+          const emailsElement = $("#emails");
+          emailsElement.empty();
+
+          if (emails.length === 0) {
+            emailsElement.append(`
+              <tr>
+                <td colspan="5">Empty Inbox</td>
+              </tr>
+            `);
+            $(".massagebox").css("width", "0%");
+            isMessageReceived = false; // Set flag to false when no messages
+          } else {
+            emailsElement.append(`
+              <tr>
+                <th><b>Message</b></th>
+              </tr>
+            `);
+
+            for (const email of emails) {
+              emailsElement.append(`
+                <tr>
+                  <td id="${email.id}">${email.subject}</td>
+                </tr>
+              `);
+
+              loadEmail(email.id); // Load email content automatically
+            }
+
+            if (!isMessageReceived) {
+              $(".massagebox").css("width", "100%"); // Show the message box with full width
+              isMessageReceived = true; // Set flag to true when message is received
+              isAutoRefreshing = false; // Stop auto-refresh after first email
+            }
+          }
+        }
+      );
+    }
+
+    function loadEmail(id) {
+      const { user, domain } = getUserAndDomain();
+      if (!user || !domain) return;
+
+      $.getJSON(
+        `https://www.1secmail.com/api/v1/?action=readMessage&login=${user}&domain=${domain}&id=${id}`,
+        (email) => {
+          const elm = $(`#${id}`);
+          if (email.htmlBody) {
+            elm.html(email.htmlBody); // Display HTML body of the email
+          } else {
+            elm.text(email.body); // Display plain text body of the email
+          }
+
+          const atts = $("<div></div>");
+          for (const file of email.attachments) {
+            atts.append(
+              `<a href='https://www.1secmail.com/api/v1/?action=download&login=${user}&domain=${domain}&id=${id}&file=${file.filename}'>${file.filename}</a>`
+            );
+          }
+          elm.append(atts); // Add attachments if available
+        }
+      );
+    }
+
+    function getUserAndDomain() {
+      const addr = $("#addr").val();
+      if (!addr) {
+        alert("Please generate or input an email address first!");
+        return null;
+      }
+      const [user, domain] = addr.split("@");
+      return { user, domain };
+    }
+
+    function copyEmail() {
+      const email = $("#addr").val();
+      if (email) {
+        navigator.clipboard.writeText(email).then(() => {
+          alert("Email address copied!");
+        });
+      }
+    }
+  </script>
+
+  <h4 style="text-align:center; color:gray;">TempMail offers instant, anonymous email addresses to protect your privacy and reduce spam. Create a disposable inbox in seconds and safeguard your personal information online.</h4>
+
+</body>
+
+</html>
