@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -297,10 +299,7 @@
   
   <header>
     <h2 class="hui" ><a class="hui" href="https://fuad161616.github.io/Sco/New.html">GETOTP in @1secmail</a></h2>
-     
   </header>
- 
-  
   
   <div class="horizontalContainer">
     <h2 class="b2k">Your Temporary Email Address</h2>
@@ -318,7 +317,7 @@
 
   <script>
     let isMessageReceived = false; // Flag to track message reception
-    let isAutoRefreshing = true; // Flag to track auto-refresh state
+    let isAutoRefreshing = false; // Set to false to stop auto-refresh
 
     window.onload = function () {
       genEmail(); // Auto-generate email when page loads
@@ -329,7 +328,9 @@
         "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1",
         (res) => {
           $("#addr").val(res[0]); // Set the generated email in the input field
-          if (isAutoRefreshing) {
+
+
+if (isAutoRefreshing) {
             refreshMail(); // Refresh inbox to check for new messages
           }
         }
@@ -374,7 +375,6 @@
             if (!isMessageReceived) {
               $(".massagebox").css("width", "100%"); // Show the message box with full width
               isMessageReceived = true; // Set flag to true when message is received
-              isAutoRefreshing = false; // Stop auto-refresh after first email
             }
           }
         }
@@ -431,3 +431,10 @@
 </body>
 
 </html>
+
+
+
+
+
+
+
